@@ -1,0 +1,63 @@
+/* categories.css */
+
+/* Categories */
+.categories-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .categories-container h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .add-category-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 1rem;
+  }
+  
+  .add-category-btn:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Bảng danh sách */
+  .categories-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  
+  .categories-table th,
+  .categories-table td {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .categories-table th {
+    background: #34495e;
+    color: white;
+    text-transform: uppercase;
+  }
+  
+  .categories-table tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+  
+  .categories-table tr:hover {
+    background: #ecf0f1;
+  }
+  
