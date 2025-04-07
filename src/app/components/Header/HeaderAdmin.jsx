@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUserCircle } from 'react-icons/fa'; // Icon user đẹp
+import { FaUserCircle } from 'react-icons/fa';
 import logo from '../../assets/images/logo.png';
 
 function HeaderAdmin() {
@@ -24,7 +24,7 @@ function HeaderAdmin() {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: '1rem',
-                color: 'white', // chữ trắng
+                color: 'white',
             }}
         >
             <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleLogoClick}>

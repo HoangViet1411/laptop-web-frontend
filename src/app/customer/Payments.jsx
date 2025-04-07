@@ -1,8 +1,9 @@
-// src/app/customer/Payments.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const Payments = () => {
   const [cart, setCart] = useState({ products: [] });
@@ -18,7 +19,7 @@ const Payments = () => {
     const fetchCart = async () => {
       const userId = localStorage.getItem('username') || 'guest';
       try {
-        const res = await axios.get(`/api/carts/${userId}`);
+        const res = await axios.get(`${API_URL}/api/carts/${userId}`);
         setCart(res.data);
       } catch (err) {
         console.error('Lỗi khi lấy giỏ hàng:', err);
@@ -49,7 +50,7 @@ const Payments = () => {
 
     try {
       const orderData = {
-        userId, // Thêm userId
+        userId,
         customerName: orderInfo.customerName,
         phone: orderInfo.phone,
         address: orderInfo.address,
@@ -62,10 +63,10 @@ const Payments = () => {
         totalAmount: totalPrice,
       };
 
-      const res = await axios.post('/api/orders', orderData);
+      const res = await axios.post(`${API_URL}/api/orders`, orderData);
       console.log('Order created:', res.data);
 
-      await axios.delete(`/api/carts/${userId}`);
+      await axios.delete(`${API_URL}/api/carts/${userId}`);
       setCart({ products: [] });
 
       toast.success('Đặt hàng thành công!');

@@ -1,7 +1,8 @@
-// src/app/components/SidebarCustomer/SideBarCustomer.jsx
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const SideBarCustomer = () => {
   const [categories, setCategories] = useState([]);
@@ -9,7 +10,7 @@ const SideBarCustomer = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get('/api/categories');
+        const res = await axios.get(`${API_URL}/api/categories`);
         console.log('Categories fetched:', res.data);
         setCategories(res.data);
       } catch (err) {

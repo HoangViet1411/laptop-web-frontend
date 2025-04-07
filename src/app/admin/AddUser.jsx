@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function AddUser() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -12,7 +14,7 @@ function AddUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const endpoint = role === 'admin' ? '/api/auth/register-admin' : '/api/auth/register';
+      const endpoint = role === 'admin' ? `${API_URL}/api/auth/register-admin` : `${API_URL}/api/auth/register`;
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -24,7 +26,7 @@ function AddUser() {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Không thể thêm người dùng');
       }
-      navigate('/admin/users'); // Quay lại danh sách sau khi thêm thành công
+      navigate('/admin/users');
     } catch (err) {
       setError(err.message);
     }

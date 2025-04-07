@@ -1,6 +1,7 @@
-// ProductList.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function ProductList() {
     const [products, setProducts] = useState([]);
@@ -8,7 +9,7 @@ function ProductList() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/products")
+        fetch(`${API_URL}/api/products`)
             .then((res) => {
                 if (!res.ok) throw new Error("Lỗi kết nối đến server");
                 return res.json();
@@ -27,7 +28,7 @@ function ProductList() {
         if (!window.confirm("Bạn có chắc muốn xóa sản phẩm này không?")) return;
 
         try {
-            const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+            const res = await fetch(`${API_URL}/api/products/${id}`, {
                 method: "DELETE",
             });
 
@@ -55,7 +56,7 @@ function ProductList() {
                         <th>Name</th>
                         <th>Price</th>
                         <th>Category</th>
-                        <th>Desciption</th>
+                        <th>Description</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -64,7 +65,7 @@ function ProductList() {
                         products.map((p) => (
                             <tr key={p._id}>
                                 <td>
-                                    {p.image && <img src={`http://localhost:5000${p.image}`} alt={p.name} style={{ width: "50px", height: "50px", objectFit: "cover" }} />}
+                                    {p.image && <img src={p.image} alt={p.name} style={{ width: "50px", height: "50px", objectFit: "cover" }} />}
                                 </td>
                                 <td>{p.name}</td>
                                 <td>{p.price?.toLocaleString()} VND</td>

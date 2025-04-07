@@ -1,6 +1,7 @@
-// EditProduct.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function EditProduct() {
     const { id } = useParams();
@@ -14,12 +15,12 @@ function EditProduct() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/categories")
+        fetch(`${API_URL}/api/categories`)
             .then((res) => res.json())
             .then(setCategories)
             .catch(() => setError("Không thể tải danh mục."));
         
-        fetch(`http://localhost:5000/api/products/${id}`)
+        fetch(`${API_URL}/api/products/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 setName(data.name);
@@ -46,7 +47,7 @@ function EditProduct() {
         formData.append("description", description);
         if (image) formData.append("image", image);
 
-        fetch(`http://localhost:5000/api/products/${id}`, {
+        fetch(`${API_URL}/api/products/${id}`, {
             method: "PUT",
             body: formData
         })
@@ -77,4 +78,5 @@ function EditProduct() {
         </form>
     );
 }
+
 export default EditProduct;

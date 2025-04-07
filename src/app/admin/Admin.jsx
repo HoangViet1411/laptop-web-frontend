@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import SideBarAdmin from '../components/SideBarAdmin/SideBarAdmin';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function Admin({ children }) {
     const navigate = useNavigate();
     const [isAdmin, setIsAdmin] = useState(false);
@@ -12,7 +14,7 @@ function Admin({ children }) {
         if (!username) return navigate('/');
 
         axios
-            .get(`http://localhost:5000/api/auth/check-admin?username=${username}`)
+            .get(`${API_URL}/api/auth/check-admin?username=${username}`)
             .then((res) => {
                 if (!res.data.isAdmin) {
                     navigate('/');

@@ -1,7 +1,8 @@
-// src/app/customer/OrderCustomer.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const OrderCustomer = () => {
   const [orders, setOrders] = useState([]);
@@ -12,7 +13,7 @@ const OrderCustomer = () => {
     const fetchOrders = async () => {
       const userId = localStorage.getItem('username') || 'guest';
       try {
-        const res = await axios.get(`/api/orders/user/${userId}`);
+        const res = await axios.get(`${API_URL}/api/orders/user/${userId}`);
         setOrders(res.data);
         setLoading(false);
       } catch (err) {

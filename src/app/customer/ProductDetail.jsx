@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -10,7 +12,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`/api/products/${id}`);
+        const res = await axios.get(`${API_URL}/api/products/${id}`);
         setProduct(res.data);
       } catch (err) {
         console.error('Lỗi khi lấy chi tiết sản phẩm:', err);
@@ -23,7 +25,7 @@ const ProductDetail = () => {
     if (!product) return;
     const userId = localStorage.getItem('username') || 'guest';
     try {
-      const res = await axios.post(`/api/carts/${userId}`, {
+      const res = await axios.post(`${API_URL}/api/carts/${userId}`, {
         productId: product._id,
         name: product.name,
         price: product.price,

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function RegisterForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -10,15 +12,15 @@ function RegisterForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/auth/register', { username, password });
-            navigate('/'); // Điều hướng về trang đăng nhập sau khi đăng ký thành công
+            await axios.post(`${API_URL}/api/auth/register`, { username, password });
+            navigate('/');
         } catch (error) {
             console.error(error.response.data);
         }
     };
 
     return (
-        <div className="register-container"> {/* Thêm container cho RegisterForm */}
+        <div className="register-container">
             <form onSubmit={handleSubmit}>
                 <h2>Đăng ký</h2>
                 <input

@@ -1,6 +1,7 @@
-// frontend/components/AddProduct.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function AddProduct() {
     const [name, setName] = useState("");
@@ -13,7 +14,7 @@ function AddProduct() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/categories")
+        fetch(`${API_URL}/api/categories`)
             .then((res) => res.json())
             .then((data) => setCategories(data))
             .catch(() => setError("Không thể tải danh mục."));
@@ -35,7 +36,7 @@ function AddProduct() {
         formData.append("description", description);
         formData.append("image", image);
 
-        fetch("http://localhost:5000/api/products", {
+        fetch(`${API_URL}/api/products`, {
             method: "POST",
             body: formData
         })

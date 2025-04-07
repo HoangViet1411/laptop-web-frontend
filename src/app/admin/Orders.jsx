@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios"; // Thay fetch bằng axios để đồng bộ với các file khác
+import axios from "axios";
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -10,7 +12,7 @@ function Orders() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get("/api/orders"); // Sử dụng axios
+        const res = await axios.get(`${API_URL}/api/orders`);
         setOrders(res.data);
         setLoading(false);
       } catch (err) {
@@ -25,7 +27,7 @@ function Orders() {
     if (!window.confirm("Bạn có chắc muốn xóa đơn hàng này không?")) return;
 
     try {
-      await axios.delete(`/api/orders/${id}`);
+      await axios.delete(`${API_URL}/api/orders/${id}`);
       setOrders(orders.filter((order) => order._id !== id));
     } catch (error) {
       alert("Xóa đơn hàng thất bại!");
@@ -56,7 +58,7 @@ function Orders() {
             <th>Tên khách hàng</th>
             <th>Số điện thoại</th>
             <th>Địa chỉ</th>
-            <th>Phương thức thanh toán</th> {/* Thêm cột mới */}
+            <th>Phương thức thanh toán</th>
             <th>Ngày đặt hàng</th>
             <th>Sản phẩm</th>
             <th>Tổng tiền</th>
@@ -106,7 +108,7 @@ function Orders() {
           ) : (
             <tr>
               <td
-                colSpan="8" // Cập nhật colspan để khớp số cột
+                colSpan="8"
                 style={{ textAlign: "center", fontWeight: "bold", padding: "10px" }}
               >
                 Không có đơn hàng nào!

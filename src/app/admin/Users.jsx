@@ -1,6 +1,7 @@
-// frontend/src/app/admin/Users.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function Users() {
     const [users, setUsers] = useState([]);
@@ -21,13 +22,13 @@ function Users() {
             }
 
             try {
-                const adminResponse = await fetch(`http://localhost:5000/api/auth/check-admin?username=${currentUser}`);
+                const adminResponse = await fetch(`${API_URL}/api/auth/check-admin?username=${currentUser}`);
                 if (!adminResponse.ok) throw new Error('Không thể kiểm tra quyền admin');
                 const adminData = await adminResponse.json();
                 if (!adminData.isAdmin) throw new Error('Chỉ admin mới có quyền xem danh sách');
                 setIsAdmin(true);
 
-                const usersResponse = await fetch(`http://localhost:5000/api/auth/users?username=${currentUser}`);
+                const usersResponse = await fetch(`${API_URL}/api/auth/users?username=${currentUser}`);
                 if (!usersResponse.ok) throw new Error('Không thể tải danh sách người dùng');
                 const usersData = await usersResponse.json();
                 setUsers(usersData);
@@ -44,7 +45,7 @@ function Users() {
     const handleDelete = async (id) => {
         if (window.confirm('Bạn có chắc muốn xóa người dùng này?')) {
             try {
-                const response = await fetch(`http://localhost:5000/api/auth/users/${id}?username=${currentUser}`, {
+                const response = await fetch(`${API_URL}/api/auth/users/${id}?username=${currentUser}`, {
                     method: 'DELETE',
                 });
                 if (!response.ok) {
@@ -66,7 +67,7 @@ function Users() {
     const handleAddUser = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:5000/api/auth/users?username=${currentUser}`, {
+            const response = await fetch(`${API_URL}/api/auth/users?username=${currentUser}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newUser),
@@ -92,7 +93,6 @@ function Users() {
                 {showAddForm ? 'Ẩn Form' : 'Thêm Người Dùng'}
             </button>
 
-            {/* Form thêm user */}
             {showAddForm && (
                 <form onSubmit={handleAddUser} style={{ marginBottom: '1rem' }}>
                     <input

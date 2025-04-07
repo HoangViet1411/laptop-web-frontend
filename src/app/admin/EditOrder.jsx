@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function EditOrder() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -9,8 +11,7 @@ function EditOrder() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        // Lấy thông tin đơn hàng từ API
-        fetch(`http://localhost:5000/api/orders/${id}`)
+        fetch(`${API_URL}/api/orders/${id}`)
             .then(res => {
                 if (!res.ok) throw new Error("Không thể lấy thông tin đơn hàng.");
                 return res.json();
@@ -23,13 +24,13 @@ function EditOrder() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/${id}`, {
+            const res = await fetch(`${API_URL}/api/orders/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(order),
             });
             if (!res.ok) throw new Error("Cập nhật đơn hàng thất bại!");
-            navigate("/admin/orders"); // Chuyển hướng đến trang danh sách đơn hàng
+            navigate("/admin/orders");
         } catch (err) {
             setError(err.message);
         }

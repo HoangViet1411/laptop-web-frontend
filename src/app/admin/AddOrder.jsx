@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Thay fetch bằng axios
+import axios from "axios";
+
+// Cấu hình API_URL
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function AddOrder() {
   const navigate = useNavigate();
@@ -9,7 +12,7 @@ function AddOrder() {
     customerName: "",
     phone: "",
     address: "",
-    paymentMethod: "cash", // Thêm mặc định là "cash"
+    paymentMethod: "cash",
     productId: "",
     quantity: 1,
     products: [],
@@ -18,10 +21,11 @@ function AddOrder() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("/api/products");
+        const res = await axios.get(`${API_URL}/api/products`); // Sử dụng API_URL
         setProducts(res.data);
       } catch (err) {
         console.error("Lỗi khi lấy danh sách sản phẩm:", err);
+        alert("Không thể tải danh sách sản phẩm.");
       }
     };
     fetchProducts();
@@ -43,6 +47,8 @@ function AddOrder() {
         productId: "",
         quantity: 1,
       });
+    } else {
+      alert("Sản phẩm không tồn tại.");
     }
   };
 
@@ -55,6 +61,11 @@ function AddOrder() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!order.customerName || !order.phone || !order.address) {
+      alert("Vui lòng điền đầy đủ thông tin khách hàng.");
+      return;
+    }
+
     const totalAmount = order.products.reduce(
       (total, product) => total + product.price * product.quantity,
       0
@@ -64,13 +75,13 @@ function AddOrder() {
       customerName: order.customerName,
       phone: order.phone,
       address: order.address,
-      paymentMethod: order.paymentMethod, // Thêm paymentMethod
+      paymentMethod: order.paymentMethod,
       products: order.products,
       totalAmount: totalAmount,
     };
 
     try {
-      const res = await axios.post("/api/orders", orderToSend);
+      const res = await axios.post(`${API_URL}/api/orders`, orderToSend); // Sử dụng API_URL
       console.log("Đơn hàng đã được thêm:", res.data);
       navigate("/admin/orders");
     } catch (error) {
@@ -160,6 +171,9 @@ function AddOrder() {
               </li>
             ))}
           </ul>
+        </div>
+        <div>
+          <h4>Tổng tiền: {order.products.reduce((total, product) => total + product.price * product.quantity, 0)} VND</h4>
         </div>
         <button
           type="submit"

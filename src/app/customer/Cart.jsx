@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const Cart = () => {
   const [cart, setCart] = useState({ products: [] });
   const navigate = useNavigate();
@@ -10,7 +12,7 @@ const Cart = () => {
     const fetchCart = async () => {
       const userId = localStorage.getItem('username') || 'guest';
       try {
-        const res = await axios.get(`/api/carts/${userId}`);
+        const res = await axios.get(`${API_URL}/api/carts/${userId}`);
         setCart(res.data);
       } catch (err) {
         console.error('Lỗi khi lấy giỏ hàng:', err);
@@ -25,7 +27,7 @@ const Cart = () => {
     if (!product) return;
 
     try {
-      const res = await axios.put(`/api/carts/${userId}`, {
+      const res = await axios.put(`${API_URL}/api/carts/${userId}`, {
         productId,
         quantity: product.quantity + 1,
       });
@@ -41,7 +43,7 @@ const Cart = () => {
     if (!product || product.quantity <= 1) return;
 
     try {
-      const res = await axios.put(`/api/carts/${userId}`, {
+      const res = await axios.put(`${API_URL}/api/carts/${userId}`, {
         productId,
         quantity: product.quantity - 1,
       });
@@ -54,7 +56,7 @@ const Cart = () => {
   const removeFromCart = async (productId) => {
     const userId = localStorage.getItem('username') || 'guest';
     try {
-      const res = await axios.delete(`/api/carts/${userId}/${productId}`);
+      const res = await axios.delete(`${API_URL}/api/carts/${userId}/${productId}`);
       setCart(res.data.cart);
     } catch (err) {
       console.error('Lỗi khi xóa sản phẩm:', err);
@@ -67,7 +69,7 @@ const Cart = () => {
   );
 
   const handleCheckout = () => {
-    navigate('/payment'); // Chuyển đến trang OrderCustomers
+    navigate('/payment');
   };
 
   if (cart.products.length === 0) {

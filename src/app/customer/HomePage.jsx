@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation, Link } from 'react-router-dom';
-import { toast } from 'react-toastify'; // Nhập toast
+import { toast } from 'react-toastify';
 import SliderComponent from '../components/Slider/SliderComponent';
 import SideBarCustomer from '../components/SidebarCustomer/SideBarCustomer';
+
+// Định nghĩa API_URL từ biến môi trường hoặc fallback về localhost khi phát triển
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:10000';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -17,17 +20,22 @@ const HomePage = () => {
         const searchQuery = searchParams.get('search') || '';
         const categoryQuery = searchParams.get('category') || '';
 
-        let apiUrl = '/api/products';
         const params = {};
         if (searchQuery) params.search = searchQuery;
         if (categoryQuery) params.category = categoryQuery;
 
-        const res = await axios.get(apiUrl, { params });
+        console.log('Fetching products with params:', params); // Debug
+        const res = await axios.get(`${API_URL}/api/products`, { params });
+        console.log('Products received:', res.data); // Debug
         setProducts(res.data);
         setLoading(false);
       } catch (err) {
         console.error('Lỗi khi lấy sản phẩm:', err);
         setLoading(false);
+        toast.error('Không thể tải danh sách sản phẩm!', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
       }
     };
 
@@ -37,7 +45,7 @@ const HomePage = () => {
   const addToCart = async (product) => {
     const userId = localStorage.getItem('username') || 'guest';
     try {
-      const res = await axios.post(`/api/carts/${userId}`, {
+      const res = await axios.post(`${API_URL}/api/carts/${userId}`, {
         productId: product._id,
         name: product.name,
         price: product.price,
@@ -59,7 +67,7 @@ const HomePage = () => {
   };
 
   if (loading) {
-    return <div>Đang tải...</div>;
+    return <div style={{ padding: '100px 20px', textAlign: 'center' }}>Đang tải...</div>;
   }
 
   return (
@@ -74,7 +82,11 @@ const HomePage = () => {
             <div className="product-list">
               {products.length > 0 ? (
                 products.map((product) => (
-                  <div key={product._id} className="product-card" style={{ marginBottom: '20px', padding: '15px', border: '1px solid #ddd' }}>
+                  <div
+                    key={product._id}
+                    className="product-card"
+                    style={{ marginBottom: '20px', padding: '15px', border: '1px solid #ddd' }}
+                  >
                     <img
                       src={product.image}
                       alt={product.name}
@@ -86,13 +98,22 @@ const HomePage = () => {
                       {new Intl.NumberFormat('vi-VN').format(product.price)} VND
                     </p>
                     <Link to={`/product/${product._id}`}>
-                      <button style={{ padding: '8px 16px', background: '#007bff', color: 'white', border: 'none', cursor: 'pointer' }}>
+                      <button
+                        style={{ padding: '8px 16px', background: '#007bff', color: 'white', border: 'none', cursor: 'pointer' }}
+                      >
                         Xem chi tiết
                       </button>
                     </Link>
                     <button
                       onClick={() => addToCart(product)}
-                      style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', cursor: 'pointer', marginTop: '10px' }}
+                      style={{
+                        padding: '8px 16px',
+                        background: '#28a745',
+                        color: 'white',
+                        border: 'none',
+                        cursor: 'pointer',
+                        marginTop: '10px',
+                      }}
                     >
                       Thêm vào giỏ hàng
                     </button>

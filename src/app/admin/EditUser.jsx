@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function EditUser() {
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState(''); // Thêm state cho password
+  const [password, setPassword] = useState('');
   const [role, setRole] = useState('user');
   const [error, setError] = useState(null);
-  const { id } = useParams(); // Lấy ID từ URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const currentUser = localStorage.getItem('username');
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(`/api/auth/users?username=${currentUser}`);
+        const response = await fetch(`${API_URL}/api/auth/users?username=${currentUser}`);
         if (!response.ok) throw new Error('Không thể tải thông tin người dùng');
         const users = await response.json();
         const user = users.find(u => u._id === id);
         if (!user) throw new Error('Người dùng không tồn tại');
         setUsername(user.username);
         setRole(user.role);
-        // Không set password vì backend không trả về password
       } catch (err) {
         setError(err.message);
       }
@@ -32,9 +33,9 @@ function EditUser() {
     e.preventDefault();
     try {
       const updateData = { username, role };
-      if (password) updateData.password = password; // Chỉ gửi password nếu có giá trị
+      if (password) updateData.password = password;
 
-      const response = await fetch(`/api/auth/users/${id}?username=${currentUser}`, {
+      const response = await fetch(`${API_URL}/api/auth/users/${id}?username=${currentUser}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +46,7 @@ function EditUser() {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Không thể cập nhật người dùng');
       }
-      navigate('/admin/users'); // Quay lại danh sách sau khi sửa thành công
+      navigate('/admin/users');
     } catch (err) {
       setError(err.message);
     }

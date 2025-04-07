@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function Categories() {
     const [categories, setCategories] = useState([]);
@@ -13,7 +14,7 @@ function Categories() {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`http://localhost:5000/api/categories`);
+            const response = await fetch(`${API_URL}/api/categories`);
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || `Lỗi ${response.status}`);
             setCategories(data);
@@ -42,7 +43,7 @@ function Categories() {
         if (window.confirm(`Bạn có chắc muốn xóa danh mục này không?`)) {
             setError(null);
             try {
-                const response = await fetch(`http://localhost:5000/api/categories/${id}?username=${encodeURIComponent(currentUser)}`, {
+                const response = await fetch(`${API_URL}/api/categories/${id}?username=${encodeURIComponent(currentUser)}`, {
                     method: 'DELETE',
                 });
                 const responseData = await response.json();
@@ -82,7 +83,7 @@ function Categories() {
                     <thead>
                         <tr>
                             <th>Category Name</th>
-                            <th>Desciption</th>
+                            <th>Description</th>
                             <th>Action</th>
                         </tr>
                     </thead>
